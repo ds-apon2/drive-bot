@@ -30,14 +30,14 @@ json.loads(os.environ["GOOGLE_TOKEN"]),
 drive = build("drive", "v3", credentials=creds)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-await update.message.reply_text(
-"👋 Welcome!\n\n"
-"📷 Photos → Photos Folder\n"
-"🎥 Videos → Videos Folder\n"
-"📄 Documents → Documents Folder\n"
-"🎵 Audio → Audio Folder\n\n"
-"Send any file and I'll upload it to Google Drive."
-)
+    await update.message.reply_text(
+        "👋 Welcome!\n\n"
+        "📷 Photos → Photos Folder\n"
+        "🎥 Videos → Videos Folder\n"
+        "📄 Documents → Documents Folder\n"
+        "🎵 Audio → Audio Folder\n\n"
+        "Send any file and I'll upload it to Google Drive."
+    )
 
 def upload_to_drive(path, filename, folder_id):
 media = MediaFileUpload(path, resumable=True)
