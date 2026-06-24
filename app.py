@@ -52,88 +52,82 @@ def upload_to_drive(path, filename, folder_id):
     ).execute()
 
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
-msg = update.message
+    msg = update.message
 
-item = None
-folder_id = None
-filename = "file.bin"
+    item = None
+    folder_id = None
+    filename = "file.bin"
 
-if msg.photo:
-    item = msg.photo[-1]
-    folder_id = PHOTO_FOLDER_ID
-    filename = f"{item.file_unique_id}.jpg"
+    if msg.photo:
+        item = msg.photo[-1]
+        folder_id = PHOTO_FOLDER_ID
+        filename = f"{item.file_unique_id}.jpg"
 
-elif msg.video:
-    item = msg.video
-    folder_id = VIDEO_FOLDER_ID
-    filename = item.file_name or f"{item.file_unique_id}.mp4"
+    elif msg.video:
+        item = msg.video
+        folder_id = VIDEO_FOLDER_ID
+        filename = item.file_name or f"{item.file_unique_id}.mp4"
 
-elif msg.document:
-    item = msg.document
-    folder_id = DOCUMENT_FOLDER_ID
-    filename = item.file_name or f"{item.file_unique_id}.bin"
+    elif msg.document:
+        item = msg.document
+        folder_id = DOCUMENT_FOLDER_ID
+        filename = item.file_name or f"{item.file_unique_id}.bin"
 
-elif msg.audio:
-    item = msg.audio
-    folder_id = AUDIO_FOLDER_ID
-    filename = item.file_name or f"{item.file_unique_id}.mp3"
+    elif msg.audio:
+        item = msg.audio
+        folder_id = AUDIO_FOLDER_ID
+        filename = item.file_name or f"{item.file_unique_id}.mp3"
 
-elif msg.voice:
-    item = msg.voice
-    folder_id = AUDIO_FOLDER_ID
-    filename = f"{item.file_unique_id}.ogg"
+    elif msg.voice:
+        item = msg.voice
+        folder_id = AUDIO_FOLDER_ID
+        filename = f"{item.file_unique_id}.ogg"
 
-else:
-    return
+    else:
+        return
 
-try:
-    await msg.reply_text("⏳ Uploading...")
+    try:
+        await msg.reply_text("⏳ Uploading...")
 
-    tg_file = await item.get_file()
+        tg_file = await item.get_file()
 
-    with tempfile.NamedTemporaryFile(delete=False) as tmp:
-        temp_path = tmp.name
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            temp_path = tmp.name
 
-    await tg_file.download_to_drive(temp_path)
+        await tg_file.download_to_drive(temp_path)
 
-    upload_to_drive(
-        temp_path,
-        filename,
-        folder_id
-    )
+        upload_to_drive(temp_path, filename, folder_id)
 
-    os.remove(temp_path)
+        os.remove(temp_path)
 
-    await msg.reply_text(
-        "✅ Successfully uploaded to Google Drive"
-    )
+        await msg.reply_text(
+            "✅ Successfully uploaded to Google Drive"
+        )
 
-except Exception as e:
-    await msg.reply_text(
-        f"❌ Error\n\n{e}"
-    )
-```
+    except Exception as e:
+        await msg.reply_text(f"❌ Error\n\n{e}")
 
 def main():
-app = Application.builder().token(BOT_TOKEN).build()
+    app = Application.builder().token(BOT_TOKEN).build()
 
-app.add_handler(
-    CommandHandler("start", start)
-)
-
-app.add_handler(
-    MessageHandler(
-        filters.PHOTO
-        | filters.VIDEO
-        | filters.Document.ALL
-        | filters.AUDIO
-        | filters.VOICE,
-        handle_file
+    app.add_handler(
+        CommandHandler("start", start)
     )
-)
 
-print("Bot Started...")
-app.run_polling()
+    app.add_handler(
+        MessageHandler(
+            filters.PHOTO
+            | filters.VIDEO
+            | filters.Document.ALL
+            | filters.AUDIO
+            | filters.VOICE,
+            handle_file
+        )
+    )
 
-if **name** == "**main**":
-main()
+    print("Bot Started...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
