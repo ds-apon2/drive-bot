@@ -50,12 +50,10 @@ def upload_to_drive(path, filename, folder_id):
         media_body=media,
         fields="id"
     ).execute()
-```
 
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 msg = update.message
 
-```
 item = None
 folder_id = None
 filename = "file.bin"
@@ -119,7 +117,6 @@ except Exception as e:
 def main():
 app = Application.builder().token(BOT_TOKEN).build()
 
-```
 app.add_handler(
     CommandHandler("start", start)
 )
@@ -137,7 +134,6 @@ app.add_handler(
 
 print("Bot Started...")
 app.run_polling()
-```
 
 if **name** == "**main**":
 main()
