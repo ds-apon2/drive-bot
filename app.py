@@ -40,17 +40,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 def upload_to_drive(path, filename, folder_id):
-media = MediaFileUpload(path, resumable=True)
+    media = MediaFileUpload(path, resumable=True)
 
-```
-drive.files().create(
-    body={
-        "name": filename,
-        "parents": [folder_id]
-    },
-    media_body=media,
-    fields="id"
-).execute()
+    drive.files().create(
+        body={
+            "name": filename,
+            "parents": [folder_id]
+        },
+        media_body=media,
+        fields="id"
+    ).execute()
 ```
 
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
